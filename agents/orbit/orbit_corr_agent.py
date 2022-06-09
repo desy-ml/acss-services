@@ -1,4 +1,3 @@
-from adapter.petra.utils import set_service_by_env_values
 from adapter.petra.PetraMachineAdapter import PetraMachineAdapter
 from adapter.petra.TineSimAdapter import TineSimReader
 

@@ -3,7 +3,7 @@ import at
 import numpy as np
 
 from adapter.petra.TineSimAdapter import TineSimAdapter
-from acss_core.agent_result_message import AgentResultMessage
+from acss_core.messages.agent_result_message import AgentResultMessage
 from acss_core.simple_service import SimpleService
 from acss_core.logger import init_logger
 from acss_core.simulation.physics_based.p3_elements_v24_c4l import *
