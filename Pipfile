@@ -5,7 +5,7 @@ name = "pypi"
 
 [packages]
 accelerator-toolbox = "==0.1.0"
-ml-pipe-core = "*"
+acss-core = "*"
 
 [dev-packages]
 ipykernel = "*"
