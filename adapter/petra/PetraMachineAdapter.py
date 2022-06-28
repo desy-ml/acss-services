@@ -276,7 +276,7 @@ class PetraMachineAdapter():
             new_x[ordered_idx] = xy_arr[idx, :][0]
             new_y[ordered_idx] = xy_arr[idx, :][1]
 
-        xy = [[x_val, y_val] for x_val, y_val in zip(new_x, new_y)]
+        xy = [[float(x_val), float(y_val)] for x_val, y_val in zip(new_x, new_y)]
         self.write("/SIMULATION/PETRA/LBRENV", "ALL", "XY", input=xy)
 
     def get_ddxy(self, n_turns=10) -> Tuple[np.ndarray, List[str]]:
