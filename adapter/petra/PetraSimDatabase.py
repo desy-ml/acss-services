@@ -146,6 +146,7 @@ class PetraSimDatabase():
             self.db_connector.sql_con.commit()
             cursor.close()
         except mysql.connector.Error as error:
+            _logger.error(f"Rollback: error while setting bpms: {error}")
             self.db_connector.sql_con.rollback()
 
     @wait_until_table_created(TABLE_NAMES.MAGNETS)
@@ -173,6 +174,7 @@ class PetraSimDatabase():
             cursor.close()
             return True
         except mysql.connector.Error as error:
+            _logger.error(f"Rollback: error while setting bpms: {error}")
             self.db_connector.sql_con.rollback()
         return False
 
@@ -186,6 +188,7 @@ class PetraSimDatabase():
             cursor.close()
             return True
         except mysql.connector.Error as error:
+            _logger.error(f"Rollback: error while setting bpms: {error}")
             self.db_connector.sql_con.rollback()
         return False
 
@@ -197,6 +200,7 @@ class PetraSimDatabase():
             cursor.executemany("Update machine_params set value = %s where param = %s", data)
             cursor.close()
         except mysql.connector.Error as error:
+            _logger.error(f"Rollback: error while setting bpms: {error}")
             self.db_connector.sql_con.rollback()
 
     def _create_update_queries(self, table, where_key, rows):
@@ -328,5 +332,6 @@ class PetraSimDatabase():
             cursor.close()
             return True
         except mysql.connector.Error as error:
+            _logger.error(f"Rollback: error while setting bpms: {error}")
             self.db_connector.sql_con.rollback()
             return False
