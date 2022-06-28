@@ -33,10 +33,7 @@ class BPM:
 
 
 class BPMAdapter:
-    def __init__(self, read, path_to_calibr_files, path_to_constants_file, units='mm'):
-        self.units = units
-        scales = {'nm': 1, 'mum': 1e-3, 'mm': 1e-6, 'm': 1e-9}
-        self.scale = scales[units]
+    def __init__(self, read, path_to_calibr_files, path_to_constants_file):
         self.path_to_calibr_files = path_to_calibr_files
         self.read = read
 
@@ -127,48 +124,40 @@ class BPMAdapter:
             res_cor[i, :, 1] = y
         return res_cor/scale
 
-    def get_reference(self, start_with="BPM_SOR_61"):
-        # start_with = "BPM_SWR_13"
-        name0 = self.bpm_names[0]
-        x = np.array(self.read('/PETRA/REFORBIT/', name0, 'SA_X'))
-        y = np.array(self.read('/PETRA/REFORBIT/', name0, 'SA_Y'))
-        res = np.vstack((x, y)).T
-        res = res[:-2]
-
-        start_i, names = self.get_names(start_with)
-        return np.roll(res, -start_i, axis=0)*self.scale, names
-
     def get_offsets(self, start_with="BPM_SOR_61"):
         name0 = self.bpm_names[0]
         x = np.array(self.read('/PETRA/REFORBIT', name0, 'CORR_X_BBA'))
-        y = np.array(self.read('/PETRA/REFORBIT/', name0, 'CORR_Y_BBA'))
+        y = np.array(self.read('/PETRA/REFORBIT', name0, 'CORR_Y_BBA'))
         res = np.vstack((x, y)).T
         res = res[:-2]
 
         start_i, names = self.get_names(start_with)
-        return np.roll(res, -start_i, axis=0)*self.scale, names
+        return np.roll(res, -start_i, axis=0), names
 
     def get_offsets_go(self, start_with="BPM_SOR_61"):
         name0 = self.bpm_names[0]
-        # x = np.array(self.read('/PETRA/REFORBIT/', name0,'SA_X')['data'])*self.scale
         x = np.array(self.read('/PETRA/REFORBIT', name0, 'CORR_X_BBAGO'))
         y = np.array(self.read('/PETRA/REFORBIT', name0, 'CORR_Y_BBAGO'))
         res = np.vstack((x, y)).T
         res = res[:-2]
         start_i, names = self.get_names(start_with)
-        return np.roll(res, -start_i, axis=0)*self.scale, names
+        return np.roll(res, -start_i, axis=0), names
 
     def get_orbit(self, start_with="BPM_SOR_61"):
-        name0 = self.bpm_names[0]
-        x = np.array(self.read('/PETRA/REFORBIT', name0, 'SA_X'))  # *self.scale
-        y = np.array(self.read('/PETRA/REFORBIT', name0, 'SA_Y'))  # *self.scale
+        """ In meter
 
-        #x = np.array(self.read('/PETRA/LBRENV', name0, 'SA_X'))
-        #y = np.array(self.read('/PETRA/LBRENV', name0, 'SA_Y'))
+        :param start_with: _description_, defaults to "BPM_SOR_61"
+        :type start_with: str, optional
+        :return: _description_
+        :rtype: _type_
+        """
+        name0 = self.bpm_names[0]
+        x = np.array(self.read('/PETRA/REFORBIT', name0, 'SA_X'))
+        y = np.array(self.read('/PETRA/REFORBIT', name0, 'SA_Y'))
         res = np.vstack((x, y)).T
         res = res[:-2]
         start_i, names = self.get_names(start_with)
-        return np.roll(res, -start_i, axis=0)*self.scale, names
+        return np.roll(res, -start_i, axis=0), names
 
     def get_bpm_beam_currents(self, n_turns=10):
         if self.c0 == None or self.c1 == None:
