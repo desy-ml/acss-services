@@ -43,12 +43,12 @@ def find_index_in_list(l: List[str], elements: List[str]) -> Tuple[str, Optional
 
 
 class PetraMachineAdapter():
-    def __init__(self, write, read, energy=6.063, bpm_unit='mm'):
+    def __init__(self, write, read, energy=6.063):
 
         rpath_to_bpm_calibr_files = Path(PATH_TO_ACSS_SERVICES_ROOT) / Path("adapter/petra/config")
         path_to_bpm_calibr_files = rpath_to_bpm_calibr_files / "bpm_settings"
         filepath_to_constants_file = rpath_to_bpm_calibr_files / "constants.csv"
-        self.bpm_adapter = BPMAdapter(read=read, units=bpm_unit, path_to_calibr_files=path_to_bpm_calibr_files, path_to_constants_file=filepath_to_constants_file)
+        self.bpm_adapter = BPMAdapter(read=read, path_to_calibr_files=path_to_bpm_calibr_files, path_to_constants_file=filepath_to_constants_file)
         self.debug_mode = False
         self.energy = energy
         self.get_property = 'Strength.Soll'
@@ -58,13 +58,13 @@ class PetraMachineAdapter():
         self._ignore_vcors = {}
 
     @classmethod
-    def create_for_agent(cls, agent: SimpleService, energy=6.063, bpm_unit='mm'):
-        return cls(write=agent.write, read=agent.read, energy=energy, bpm_unit=bpm_unit)
+    def create_for_agent(cls, agent: SimpleService, energy=6.063):
+        return cls(write=agent.write, read=agent.read, energy=energy)
 
     @classmethod
-    def create_for_simulation(cls, energy=6.063, bpm_unit='mm'):
+    def create_for_simulation(cls, energy=6.063):
         from .TineSimAdapter import TineSimReader, TineSimWriter, PetraSimDatabase
-        return cls(write=TineSimWriter(PetraSimDatabase()), read=TineSimReader(PetraSimDatabase()), energy=energy, bpm_unit=bpm_unit)
+        return cls(write=TineSimWriter(PetraSimDatabase()), read=TineSimReader(PetraSimDatabase()), energy=energy)
 
     def get_bpm_device_names(self):
         return self.bpm_adapter.get_bpm_names()
@@ -193,7 +193,7 @@ class PetraMachineAdapter():
         for name, found_idx in find_index_in_list(l=names, elements=cor_names):
             if found_idx is not None and not name.startswith(('PKPDA', 'PKPDD')) and name not in self._ignore_hcors and name not in self._ignore_vcors:
                 strenghts_of_all_magnets.append(in_strengths[found_idx])
-                print(f"name: {name}, current: {in_strengths[found_idx]}. use new value")
+                #print(f"name: {name}, current: {in_strengths[found_idx]}. use new value")
             else:  # magnet is not set
                 curr = self.get_value(name)
                 strenghts_of_all_magnets.append(curr)  # use current value of magnet
@@ -220,9 +220,8 @@ class PetraMachineAdapter():
 
     def get_bpms(self) -> Tuple[np.ndarray, np.ndarray, List[str]]:
         data, names = self.bpm_adapter.get_orbit(start_with='BPM_SWR_13')
-        #off_go, _ = self.bpm_adapter.get_offsets_go(start_with='BPM_SWR_13')
-        x = data[:, 0]  # - off_go[:, 0]  # - ref[:,0]
-        y = data[:, 1]  # - off_go[:, 1]  # - ref[:,1]
+        x = data[:, 0]
+        y = data[:, 1]
         return x, y, names
 
     def set_machine_params(self, params: List[str], values: List[Any]):

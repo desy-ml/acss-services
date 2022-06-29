@@ -87,4 +87,9 @@ class TineReader(TineAdapter):
                 current = pt.get(addr, 'Strom.Soll', **kwargs)['data']
                 return self.current2strength([device], [current])[0]
 
-        return pt.get(addr, _property, **kwargs)['data']
+        data = pt.get(addr, _property, **kwargs)['data']
+
+        if channel == "/PETRA/REFORBIT":
+            if _property in {"SA_X", "SA_Y", 'CORR_X_BBA', 'CORR_Y_BBA', 'CORR_X_BBAGO', 'CORR_Y_BBAGO'}:
+                data = data * 10e-9 # nm to m
+        return data

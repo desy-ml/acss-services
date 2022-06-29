@@ -42,8 +42,11 @@ class OrbitCorrAgent(SimpleService):
         self.recompute_matrix()
 
     def check_model(self):
+        _logger.debug("check: bpm devices:")
         self.check_order_of_elements_in_model(self.get_bpm_names_of_model(), self.machine_adapter.get_bpm_device_names())
+        _logger.debug("check: hcor devices:")
         self.check_order_of_elements_in_model(self.get_hcor_names_of_model(), self.machine_adapter.get_hcor_device_names())
+        _logger.debug("check: vcor devices:")
         self.check_order_of_elements_in_model(self.get_vcor_names_of_model(), self.machine_adapter.get_vcor_device_names())
 
     def check_order_of_elements_in_model(self, model_ele, machine_ele):
@@ -53,6 +56,7 @@ class OrbitCorrAgent(SimpleService):
         for model, machine in zip(model_ele, machine_ele):
             if model != machine:
                 _logger.error(f"order of model and machine is different. {model} != {machine}")
+        _logger.debug("model devices and machine devices are in the same order.")
 
     def recompute_matrix(self):
 
@@ -196,7 +200,7 @@ class OrbitCorrAgent(SimpleService):
 
         cy = np.array(self.machine_adapter.get_vcors(names=self.machine_adapter.get_vcor_device_names(), is_group_call=True))
 
-        x, y, _ = self.machine_adapter.get_bpms()
+        x, y, bpm_names = self.machine_adapter.get_bpms()
 
         print(f" cx rms: {np.std(cx)} cy rms: {np.std(cy)} ")
         print(f" x rms: {np.std(x)} y rms: {np.std(y)} ")
@@ -227,9 +231,9 @@ class OrbitCorrAgent(SimpleService):
         print('x_factor', self.x_factor)
 
         print("AGENT after correction")
-        names = self.machine_adapter.get_hcor_device_names()
-        for name, s, old_s in zip(names, cx_new, cx):
-            print(f"name: {name} cx_new {s} cx: {old_s}")
+        #names = self.machine_adapter.get_hcor_device_names()
+        # for name, s, old_s in zip(names, cx_new, cx):
+        #    print(f"name: {name} cx_new {s} cx: {old_s}")
 
         print(f"computed correction max/std {np.max(dcx)}/{np.std(dcx)} strength [actual values {np.max(cx)}/{np.std(cx)}]")
 
@@ -244,8 +248,8 @@ class OrbitCorrAgent(SimpleService):
 
         print("AGENT after correction")
         names = self.machine_adapter.get_vcor_device_names()
-        for name, s, old_s in zip(names, cy_new, cy):
-            print(f"name: {name} cy_new {s} cy: {old_s}")
+        # for name, s, old_s in zip(names, cy_new, cy):
+        #    print(f"name: {name} cy_new {s} cy: {old_s}")
 
         print(f"computed correction max/std {np.max(dcy)}/{np.std(dcy)} strength [actual values {np.max(cy)}/{np.std(cy)}]")
 
