@@ -31,13 +31,30 @@ msg_bus:
   broker_urls: localhost:9094,localhost:9096
 ```
 
-Afterwards, set the path to the config yaml file in the environment value ACSS_CONFIG_FILEPATH.
+Afterwards, set the path to the config yaml file with ACSS_CONFIG_FILEPATH and the root path with PATH_TO_ACSS_SERVICES_ROOT.
 
 ```bash
-ACSS_CONFIG_FILEPATH = /path/to/ml-pipe-config.yaml
+export ACSS_CONFIG_FILEPATH = /path/to/acss-config.yaml
+```
+```bash
+export PATH_TO_ACSS_SERVICES_ROOT = /path/to/acss-services
 ```
 
-To run an Agent you need to activate the python env.
+Additionally the path to the project have to be set in the PYTHONPATH environment variable
+
+```bash
+export PYTHONPATH = /path/to/acss-services
+```
+
+Alternatively, setting the env values can be also done by defining an .env file in the root folder. The file's content look like this
+
+```bash
+ACSS_CONFIG_FILEPATH = /path/to/acss-config.yaml
+PATH_TO_ACSS_SERVICES_ROOT = /path/to/acss-services
+PYTHONPATH = /path/to/acss-services
+```
+
+To run an Agent you need to activate the python env. This will automatically load the env values in .env if defined.
 ```
 pipenv shell
 ```
