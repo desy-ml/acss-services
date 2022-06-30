@@ -17,14 +17,14 @@ observer:
   url: localhost:5003
   event_db_pw: xxxxx
   # event_db_url:
-  event_db_usr: xxxxx
+  event_db_usr: root
 register:
   # registers all services
   url: localhost:5004
 simulation:
   # sql database which maps the machine parameter
   sim_db_pw: xxxxx
-  sim_db_usr: xxxxx
+  sim_db_usr: root
   sim_db_url: localhost:3306
 msg_bus:
   # message bus
